@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Truck, Mail, Eye, EyeOff } from "lucide-react";
+import { Truck, Mail, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 
 const AuthPage = () => {
@@ -19,7 +19,6 @@ const AuthPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
@@ -92,16 +91,31 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-secondary/20">
-      <div className="w-full max-w-md">
-        <Card className="glass-card">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-secondary/20 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute top-20 left-20 w-40 h-40 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-20 w-60 h-60 bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      
+      <div className="w-full max-w-md relative z-10">
+        <Button
+          variant="ghost"
+          onClick={() => window.location.href = '/'}
+          className="mb-4 hover-scale"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
+
+        <Card className="glass-card animate-scale-in">
           <CardHeader className="text-center space-y-4">
             <div className="flex items-center justify-center space-x-2">
-              <Truck className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold">FastParcel</span>
+              <div className="p-3 bg-gradient-to-r from-primary to-purple-500 rounded-lg">
+                <Truck className="h-8 w-8 text-white" />
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">FastParcel</span>
             </div>
             <CardTitle className="text-xl">
-              {isLogin ? "Welcome back" : "Create your account"}
+              {isLogin ? "Welcome back" : "Join our community"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -110,17 +124,17 @@ const AuthPage = () => {
               <Button
                 onClick={() => handleSocialAuth('google')}
                 variant="outline"
-                className="w-full flex items-center space-x-2 glossy-button bg-red-600 hover:bg-red-700 border-red-600 text-white"
+                className="w-full flex items-center space-x-2 h-12 bg-red-600 hover:bg-red-700 border-red-600 text-white transition-all duration-300 hover-scale"
               >
-                <FaGoogle className="h-4 w-4" />
+                <FaGoogle className="h-5 w-5" />
                 <span>Continue with Google</span>
               </Button>
               <Button
                 onClick={() => handleSocialAuth('github')}
                 variant="outline"
-                className="w-full flex items-center space-x-2 glossy-button bg-gray-800 hover:bg-gray-900 border-gray-800 text-white"
+                className="w-full flex items-center space-x-2 h-12 bg-gray-800 hover:bg-gray-900 border-gray-800 text-white transition-all duration-300 hover-scale"
               >
-                <FaGithub className="h-4 w-4" />
+                <FaGithub className="h-5 w-5" />
                 <span>Continue with GitHub</span>
               </Button>
             </div>
@@ -130,7 +144,7 @@ const AuthPage = () => {
                 <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
+                <span className="bg-card px-3 text-muted-foreground">
                   Or continue with email
                 </span>
               </div>
@@ -139,7 +153,7 @@ const AuthPage = () => {
             {/* Email/Password Form */}
             <form onSubmit={handleEmailAuth} className="space-y-4">
               {!isLogin && (
-                <div className="space-y-2">
+                <div className="space-y-2 animate-fade-in">
                   <Label htmlFor="fullName">Full Name</Label>
                   <Input
                     id="fullName"
@@ -147,7 +161,7 @@ const AuthPage = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required={!isLogin}
-                    className="bg-input border-border"
+                    className="bg-input border-border h-12 transition-all duration-300 focus:ring-2 focus:ring-primary"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -156,14 +170,14 @@ const AuthPage = () => {
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-input border-border pl-10"
+                    className="bg-input border-border pl-10 h-12 transition-all duration-300 focus:ring-2 focus:ring-primary"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -178,13 +192,13 @@ const AuthPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-input border-border pr-10"
+                    className="bg-input border-border pr-10 h-12 transition-all duration-300 focus:ring-2 focus:ring-primary"
                     placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-4 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -194,7 +208,7 @@ const AuthPage = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full glossy-button"
+                className="w-full glossy-button h-12 text-lg hover-scale"
               >
                 {loading ? "Loading..." : isLogin ? "Sign In" : "Sign Up"}
               </Button>
@@ -203,7 +217,7 @@ const AuthPage = () => {
             <div className="text-center">
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors story-link"
               >
                 {isLogin
                   ? "Don't have an account? Sign up"
